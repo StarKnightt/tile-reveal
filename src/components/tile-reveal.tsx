@@ -28,6 +28,13 @@ export interface TileRevealProps {
   stagger?: number;
   /** Let a click lock the whole grid to the back side (cascades from the click point). */
   clickToLock?: boolean;
+  /**
+   * Interactive layer rendered invisibly on top of the tiles. Typically the
+   * same markup as `front` with real links/buttons: the tiled copies are
+   * pointer-inert, so this is what users actually click. It is also the only
+   * copy exposed to assistive tech.
+   */
+  overlay?: ReactNode;
   className?: string;
   style?: CSSProperties;
 }
@@ -44,6 +51,7 @@ export function TileReveal({
   duration = 620,
   stagger = 140,
   clickToLock = true,
+  overlay,
   className = "",
   style,
 }: TileRevealProps) {
@@ -184,6 +192,8 @@ export function TileReveal({
 
   const onClick = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!clickToLock) return;
+    // Real links/buttons in the overlay do their own thing.
+    if ((e.target as HTMLElement).closest("a, button")) return;
     const el = container.current;
     if (!el) return;
     const { w, h } = rect.current;
@@ -214,9 +224,7 @@ export function TileReveal({
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       onClick={onClick}
-      role={clickToLock ? "button" : undefined}
-      tabIndex={clickToLock ? 0 : undefined}
-      aria-label={clickToLock ? "Flip to reveal" : undefined}
+      data-tile-reveal=""
     >
       {cells.map((cell, i) => (
         // Clipping and perspective live on this wrapper; the child does the 3D
@@ -224,7 +232,8 @@ export function TileReveal({
         // and break backface-visibility.
         <div
           key={i}
-          aria-hidden={i !== 0}
+          aria-hidden={overlay ? true : i !== 0}
+          inert={overlay ? true : i !== 0}
           className="absolute inset-0 [perspective:1600px]"
           style={{ clipPath: cell.clip }}
         >
@@ -254,6 +263,11 @@ export function TileReveal({
           </div>
         </div>
       ))}
+      {overlay && (
+        <div className="tr-overlay absolute inset-0 z-10 opacity-0 pointer-events-none [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
+          {overlay}
+        </div>
+      )}
     </div>
   );
 }

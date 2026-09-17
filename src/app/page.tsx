@@ -40,11 +40,47 @@ function Spec({
   );
 }
 
-const PROJECTS = [
-  { name: "Jungle Trail", note: "Three.js jungle, zero downloaded art", stat: "292 ★" },
-  { name: "Outbuilt", note: "Pay-to-rank leaderboard, 11 countries", stat: "23 paid" },
-  { name: "Night Street", note: "R3F + GLSL street, featured by Claude", stat: "121 ★" },
+const NAV = [
+  { label: "Projects", href: "https://www.prasen.dev/projects" },
+  { label: "Blog", href: "https://www.prasen.dev/blog" },
+  { label: "Videos", href: "https://www.prasen.dev/videos" },
 ];
+
+const PRODUCTS = [
+  {
+    name: "Outbuilt",
+    note: "Pay-to-rank board",
+    stat: "23 paid placements",
+    href: "https://outbuilt.lol",
+  },
+  {
+    name: "PayBrackets",
+    note: "Paycheck calculator",
+    stat: "50 states + D.C.",
+    href: "https://paybrackets.com",
+  },
+  {
+    name: "Dateup",
+    note: "Dating profile AI",
+    stat: "137K impressions",
+    href: "https://dateup.in",
+  },
+  {
+    name: "Wallpaperz",
+    note: "AI wallpapers",
+    stat: "700 views / day",
+    href: "https://www.wallpaperz.in/",
+  },
+];
+
+const OPEN_SOURCE = [
+  { name: "Jungle Trail", stars: 292, href: "https://github.com/StarKnightt/jungle-trail" },
+  { name: "Night Street", stars: 121, href: "https://github.com/StarKnightt/night-street" },
+  { name: "3D Carousel", stars: 43, href: "https://github.com/StarKnightt/3D-Carousel" },
+  { name: "Backrooms", stars: 24, href: "https://github.com/StarKnightt/Backroom-Escape" },
+];
+
+const ext = { target: "_blank", rel: "noreferrer" } as const;
 
 function Landing({ variant }: { variant: Variant }) {
   const bp = variant === "blueprint";
@@ -69,7 +105,7 @@ function Landing({ variant }: { variant: Variant }) {
     >
       {/* nav */}
       <Spec bp={bp} label="nav · h 40 · space-between" className="flex h-10 items-center justify-between">
-        <div className="flex items-center gap-2.5">
+        <a href="https://www.prasen.dev" {...ext} className="flex items-center gap-2.5">
           <Spec bp={bp} label="" className="h-7 w-7">
             {bp ? (
               <div className="h-full w-full rounded-full" />
@@ -85,19 +121,22 @@ function Landing({ variant }: { variant: Variant }) {
             )}
           </Spec>
           <span className={`text-[15px] font-medium tracking-[-0.01em] ${ink}`}>Prasenjit Nayak</span>
-        </div>
+        </a>
         <div className={`flex items-center gap-7 text-[13.5px] ${muted}`}>
-          <span>Work</span>
-          <span>Writing</span>
-          <span>X</span>
+          {NAV.map((n) => (
+            <a key={n.label} href={n.href} {...ext}>
+              {n.label}
+            </a>
+          ))}
           <Spec bp={bp} label="btn · 30×118" className="h-[30px]">
-            <span
+            <a
+              href="mailto:hi@prasen.dev"
               className={`flex h-full items-center rounded-full px-3.5 font-mono text-[12.5px] ${
                 bp ? "text-[#c6c6c6]" : "bg-[#111] text-white"
               }`}
             >
               hi@prasen.dev
-            </span>
+            </a>
           </Spec>
         </div>
       </Spec>
@@ -122,29 +161,32 @@ function Landing({ variant }: { variant: Variant }) {
 
           <Spec bp={bp} label="p · Geist 16/1.55 · max 40ch" className="mt-6 w-fit">
             <p className={`max-w-[40ch] text-[16px] leading-[1.55] ${muted}`}>
-              Full stack developer. Three.js scenes with no downloaded art,
-              small products people pay for, and I share all of it with 22K+
-              people on X.
+              Full stack developer. Three.js worlds with zero downloaded art,
+              small products people actually pay for, and I share all of it
+              with 22K+ people on X.
             </p>
           </Spec>
 
           <div className="mt-8 flex items-center gap-5">
             <Spec bp={bp} label="btn · 42×112 · r-full" className="h-[42px]">
-              <span
+              <a
+                href="mailto:hi@prasen.dev"
                 className={`flex h-full items-center rounded-full px-5 text-[14px] font-medium ${
                   bp ? "text-[#c6c6c6]" : "bg-[#111] text-white"
                 }`}
               >
                 Say hi →
-              </span>
+              </a>
             </Spec>
             <Spec bp={bp} label="link · 14" className="w-fit">
-              <span className={`text-[14px] ${muted}`}>See the work</span>
+              <a href="https://x.com/prasenx" {...ext} className={`text-[14px] ${muted}`}>
+                Follow on X
+              </a>
             </Spec>
           </div>
         </div>
 
-        {/* project stack */}
+        {/* products */}
         <Spec bp={bp} label="card · r-16 · shadow-lg" className="w-full">
           <div
             className={`overflow-hidden rounded-2xl ${
@@ -157,40 +199,59 @@ function Landing({ variant }: { variant: Variant }) {
             }
           >
             <div className="flex flex-col gap-3 p-4">
-              <Spec bp={bp} label="label · mono 10" className="w-fit px-1">
-                <span className={`font-mono text-[10px] uppercase tracking-[0.08em] ${faint}`}>
-                  Selected work · 2026
-                </span>
-              </Spec>
-              {PROJECTS.map((p) => (
-                <Spec key={p.name} bp={bp} label="row · 60 · r-10" className="h-[60px]">
-                  <div
-                    className={`flex h-full items-center justify-between rounded-[10px] px-4 ${
-                      bp ? "" : "bg-white/85 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-                    }`}
-                  >
-                    <div className="flex flex-col gap-0.5">
-                      <span className={`text-[14px] font-medium tracking-[-0.01em] ${ink}`}>{p.name}</span>
-                      <span className={`text-[12px] ${muted}`}>{p.note}</span>
-                    </div>
-                    <span className={`font-mono text-[12px] ${faint}`}>{p.stat}</span>
-                  </div>
+              <div className="flex items-center justify-between px-1">
+                <Spec bp={bp} label="label · mono 10" className="w-fit">
+                  <span className={`font-mono text-[10px] uppercase tracking-[0.08em] ${faint}`}>
+                    Products · live
+                  </span>
                 </Spec>
-              ))}
+                <span className={`flex items-center gap-1.5 font-mono text-[10px] ${faint}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${bp ? "bg-[#dcdcdc]" : "bg-[#22c55e]"}`} />
+                  4 / 4 up
+                </span>
+              </div>
+              <Spec bp={bp} label="" className="grid grid-cols-2 gap-2.5">
+                {PRODUCTS.map((p) => (
+                  <Spec key={p.name} bp={bp} label="tile · 96 · r-10" className="h-[96px]">
+                    <a
+                      href={p.href}
+                      {...ext}
+                      className={`flex h-full flex-col justify-between rounded-[10px] px-3.5 py-3 ${
+                        bp ? "" : "bg-white/85 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <span className={`text-[14px] font-medium tracking-[-0.01em] ${ink}`}>{p.name}</span>
+                        <span className={`text-[12px] ${faint}`}>↗</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className={`truncate text-[12px] leading-none ${muted}`}>{p.note}</span>
+                        <span className={`truncate font-mono text-[10.5px] leading-none ${faint}`}>{p.stat}</span>
+                      </div>
+                    </a>
+                  </Spec>
+                ))}
+              </Spec>
             </div>
           </div>
         </Spec>
       </div>
 
-      {/* footer strip */}
-      <Spec bp={bp} label="logos · 12 · gap 32" className="mt-10 flex w-fit items-center gap-8">
+      {/* open source strip */}
+      <Spec bp={bp} label="oss · 13 · gap 28" className="mt-10 flex w-fit items-center gap-7">
         <span className={`font-mono text-[11px] uppercase tracking-[0.08em] ${faint}`}>
-          Work seen on
+          Open source
         </span>
-        {["Claude", "Xbox", "Vercel v0", "GitHub"].map((n) => (
-          <span key={n} className={`text-[13px] font-medium tracking-[-0.01em] ${faint}`}>
-            {n}
-          </span>
+        {OPEN_SOURCE.map((r) => (
+          <a
+            key={r.name}
+            href={r.href}
+            {...ext}
+            className={`flex items-baseline gap-1.5 text-[13px] font-medium tracking-[-0.01em] ${faint}`}
+          >
+            {r.name}
+            <span className="font-mono text-[11px] font-normal">{r.stars}★</span>
+          </a>
         ))}
       </Spec>
     </div>
@@ -203,6 +264,7 @@ export default function Page() {
       <TileReveal
         front={<Landing variant="design" />}
         back={<Landing variant="blueprint" />}
+        overlay={<Landing variant="design" />}
         rows={8}
         cols={12}
         radius={150}
