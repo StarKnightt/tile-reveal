@@ -20,7 +20,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Prasenjit Nayak — Tile Reveal",
+  title: "Tile Reveal",
   description: "Hover to see the blueprint. A calm reveal hero in React + Tailwind, no canvas.",
 };
 
