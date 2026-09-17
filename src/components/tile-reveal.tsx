@@ -111,30 +111,33 @@ export function TileReveal({
   );
 
   // Expire tiles once their hold time passes. Only runs while something is flipped.
-  const tick = useCallback(() => {
-    raf.current = null;
-    if (locked.current) return;
-    const now = performance.now();
-    let pending = false;
-    for (let i = 0; i < count; i++) {
-      if (!flipped.current[i]) continue;
-      if (now >= until.current[i]) {
-        const el = tiles.current[i];
-        if (el) {
-          flipped.current[i] = 0;
-          el.style.transitionDelay = "0ms";
-          el.dataset.flipped = "false";
+  const tick = useRef<() => void>(() => {});
+  useEffect(() => {
+    tick.current = () => {
+      raf.current = null;
+      if (locked.current) return;
+      const now = performance.now();
+      let pending = false;
+      for (let i = 0; i < count; i++) {
+        if (!flipped.current[i]) continue;
+        if (now >= until.current[i]) {
+          const el = tiles.current[i];
+          if (el) {
+            flipped.current[i] = 0;
+            el.style.transitionDelay = "0ms";
+            el.dataset.flipped = "false";
+          }
+        } else {
+          pending = true;
         }
-      } else {
-        pending = true;
       }
-    }
-    if (pending) raf.current = requestAnimationFrame(tick);
+      if (pending) raf.current = requestAnimationFrame(() => tick.current());
+    };
   }, [count]);
 
   const schedule = useCallback(() => {
-    if (raf.current == null) raf.current = requestAnimationFrame(tick);
-  }, [tick]);
+    if (raf.current == null) raf.current = requestAnimationFrame(() => tick.current());
+  }, []);
 
   useEffect(() => {
     return () => {
