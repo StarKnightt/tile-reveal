@@ -20,8 +20,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Tile Reveal",
-  description: "A calm hover-to-reveal hero. React + Tailwind, no canvas.",
+  title: "Prasenjit Nayak — Tile Reveal",
+  description: "Hover to see the blueprint. A calm reveal hero in React + Tailwind, no canvas.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

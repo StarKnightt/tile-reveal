@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { TileReveal } from "@/components/tile-reveal";
 
@@ -39,6 +40,12 @@ function Spec({
   );
 }
 
+const PROJECTS = [
+  { name: "Jungle Trail", note: "Three.js jungle, zero downloaded art", stat: "292 ★" },
+  { name: "Outbuilt", note: "Pay-to-rank leaderboard, 11 countries", stat: "23 paid" },
+  { name: "Night Street", note: "R3F + GLSL street, featured by Claude", stat: "121 ★" },
+];
+
 function Landing({ variant }: { variant: Variant }) {
   const bp = variant === "blueprint";
 
@@ -63,22 +70,33 @@ function Landing({ variant }: { variant: Variant }) {
       {/* nav */}
       <Spec bp={bp} label="nav · h 40 · space-between" className="flex h-10 items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <Spec bp={bp} label="" className="h-[22px] w-[22px]">
-            <div className={`h-full w-full rounded-[6px] ${bp ? "" : "bg-[#111]"}`} />
+          <Spec bp={bp} label="" className="h-7 w-7">
+            {bp ? (
+              <div className="h-full w-full rounded-full" />
+            ) : (
+              <Image
+                src="/avatar.webp"
+                alt=""
+                width={28}
+                height={28}
+                className="h-full w-full rounded-full bg-[#eeeeec] object-cover"
+                priority
+              />
+            )}
           </Spec>
-          <span className={`text-[15px] font-medium tracking-[-0.01em] ${ink}`}>Aether</span>
+          <span className={`text-[15px] font-medium tracking-[-0.01em] ${ink}`}>Prasenjit Nayak</span>
         </div>
         <div className={`flex items-center gap-7 text-[13.5px] ${muted}`}>
-          <span>Product</span>
-          <span>Pricing</span>
-          <span>Journal</span>
-          <Spec bp={bp} label="btn · 30×92" className="h-[30px]">
+          <span>Work</span>
+          <span>Writing</span>
+          <span>X</span>
+          <Spec bp={bp} label="btn · 30×118" className="h-[30px]">
             <span
-              className={`flex h-full items-center rounded-full px-3.5 text-[13px] font-medium ${
+              className={`flex h-full items-center rounded-full px-3.5 font-mono text-[12.5px] ${
                 bp ? "text-[#c6c6c6]" : "bg-[#111] text-white"
               }`}
             >
-              Get access
+              hi@prasen.dev
             </span>
           </Spec>
         </div>
@@ -90,71 +108,75 @@ function Landing({ variant }: { variant: Variant }) {
           <Spec bp={bp} label="eyebrow · mono 11 · +0.08em" className="w-fit">
             <div className={`flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] ${faint}`}>
               <span className={`h-1.5 w-1.5 rounded-full ${bp ? "bg-[#dcdcdc]" : "bg-[#22c55e]"}`} />
-              Now in public beta
+              Freelancing · open to DevRel
             </div>
           </Spec>
 
           <Spec bp={bp} label="h1 · Instrument Serif 54/1.02 · -0.02em" className="mt-5 w-fit">
             <h1 className={`font-serif text-[54px] leading-[1.02] tracking-[-0.02em] ${ink}`}>
-              Notes that think
+              I build things
               <br />
-              <span className="italic">alongside</span> you.
+              that feel <span className="italic">finished</span>.
             </h1>
           </Spec>
 
           <Spec bp={bp} label="p · Geist 16/1.55 · max 40ch" className="mt-6 w-fit">
             <p className={`max-w-[40ch] text-[16px] leading-[1.55] ${muted}`}>
-              Capture in plain text, connect without folders, and let quiet
-              suggestions surface what you already know.
+              Full stack developer. Three.js scenes with no downloaded art,
+              small products people pay for, and I share all of it with 22K+
+              people on X.
             </p>
           </Spec>
 
           <div className="mt-8 flex items-center gap-5">
-            <Spec bp={bp} label="btn · 42×148 · r-full" className="h-[42px]">
+            <Spec bp={bp} label="btn · 42×112 · r-full" className="h-[42px]">
               <span
                 className={`flex h-full items-center rounded-full px-5 text-[14px] font-medium ${
                   bp ? "text-[#c6c6c6]" : "bg-[#111] text-white"
                 }`}
               >
-                Start writing
+                Say hi →
               </span>
             </Spec>
             <Spec bp={bp} label="link · 14" className="w-fit">
-              <span className={`text-[14px] ${muted}`}>See how it works →</span>
+              <span className={`text-[14px] ${muted}`}>See the work</span>
             </Spec>
           </div>
         </div>
 
-        {/* product frame */}
-        <Spec bp={bp} label="img · 4:3 · r-16 · shadow-lg" className="aspect-[4/3] w-full">
+        {/* project stack */}
+        <Spec bp={bp} label="card · r-16 · shadow-lg" className="w-full">
           <div
-            className={`h-full w-full overflow-hidden rounded-2xl ${
+            className={`overflow-hidden rounded-2xl ${
               bp ? "" : "border border-black/[0.06] shadow-[0_24px_60px_-20px_rgba(0,0,0,0.25)]"
             }`}
             style={
               bp
                 ? undefined
-                : { background: "linear-gradient(135deg, #f6f6f4 0%, #ececea 100%)" }
+                : { background: "linear-gradient(135deg, #f8f8f6 0%, #eeeeeb 100%)" }
             }
           >
-            <div className="flex h-full flex-col p-5">
-              <Spec bp={bp} label="toolbar · 28" className="flex h-7 items-center gap-1.5">
-                {[0, 1, 2].map((i) => (
-                  <span key={i} className={`h-2.5 w-2.5 rounded-full ${bp ? "" : "bg-black/10"}`} />
-                ))}
+            <div className="flex flex-col gap-3 p-4">
+              <Spec bp={bp} label="label · mono 10" className="w-fit px-1">
+                <span className={`font-mono text-[10px] uppercase tracking-[0.08em] ${faint}`}>
+                  Selected work · 2026
+                </span>
               </Spec>
-              <Spec bp={bp} label="lines · 12 · gap 10" className="mt-5 flex flex-col gap-2.5">
-                {[88, 72, 80, 52].map((w, i) => (
-                  <span
-                    key={i}
-                    className={`block h-3 rounded-sm ${bp ? "" : "bg-black/[0.08]"}`}
-                    style={{ width: `${w}%` }}
-                  />
-                ))}
-              </Spec>
-              <Spec bp={bp} label="card · r-10" className="mt-auto h-[38%]">
-                <div className={`h-full w-full rounded-[10px] ${bp ? "" : "bg-white/80 shadow-sm"}`} />
-              </Spec>
+              {PROJECTS.map((p) => (
+                <Spec key={p.name} bp={bp} label="row · 60 · r-10" className="h-[60px]">
+                  <div
+                    className={`flex h-full items-center justify-between rounded-[10px] px-4 ${
+                      bp ? "" : "bg-white/85 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+                    }`}
+                  >
+                    <div className="flex flex-col gap-0.5">
+                      <span className={`text-[14px] font-medium tracking-[-0.01em] ${ink}`}>{p.name}</span>
+                      <span className={`text-[12px] ${muted}`}>{p.note}</span>
+                    </div>
+                    <span className={`font-mono text-[12px] ${faint}`}>{p.stat}</span>
+                  </div>
+                </Spec>
+              ))}
             </div>
           </div>
         </Spec>
@@ -163,9 +185,9 @@ function Landing({ variant }: { variant: Variant }) {
       {/* footer strip */}
       <Spec bp={bp} label="logos · 12 · gap 32" className="mt-10 flex w-fit items-center gap-8">
         <span className={`font-mono text-[11px] uppercase tracking-[0.08em] ${faint}`}>
-          Trusted by teams at
+          Work seen on
         </span>
-        {["Linear", "Vercel", "Arc", "Raycast"].map((n) => (
+        {["Claude", "Xbox", "Vercel v0", "GitHub"].map((n) => (
           <span key={n} className={`text-[13px] font-medium tracking-[-0.01em] ${faint}`}>
             {n}
           </span>
