@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { TileReveal } from "@/components/tile-reveal";
 
@@ -73,11 +74,22 @@ function Landing({ variant }: { variant: Variant }) {
     >
       {/* nav */}
       <Spec bp={bp} label="nav · h 40 · space-between" className="flex h-10 items-center justify-between">
-        <a href="#" className="flex items-center gap-2.5">
-          <Spec bp={bp} label="" className="h-[22px] w-[22px]">
-            <div className={`h-full w-full rounded-[6px] ${bp ? "" : "bg-[#111]"}`} />
+        <a href="https://x.com/prasenx" target="_blank" rel="noreferrer" className="flex items-center gap-2.5">
+          <Spec bp={bp} label="" className="h-7 w-7">
+            {bp ? (
+              <div className="h-full w-full rounded-full" />
+            ) : (
+              <Image
+                src="/avatar.png"
+                alt=""
+                width={28}
+                height={28}
+                className="h-full w-full rounded-full object-cover"
+                priority
+              />
+            )}
           </Spec>
-          <span className={`text-[15px] font-medium tracking-[-0.01em] ${ink}`}>Kestrel</span>
+          <span className={`text-[15px] font-medium tracking-[-0.01em] ${ink}`}>@prasenx</span>
         </a>
         <div className={`flex items-center gap-7 text-[13.5px] ${muted}`}>
           {NAV.map((n) => (
