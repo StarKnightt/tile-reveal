@@ -40,7 +40,22 @@ function Spec({
   );
 }
 
-const NAV = ["Work", "Process", "Journal"];
+const LINKS = {
+  x: "https://x.com/prasenx",
+  github: "https://github.com/StarKnightt",
+  site: "https://www.prasen.dev",
+  projects: "https://www.prasen.dev/projects",
+  blog: "https://www.prasen.dev/blog",
+  mail: "mailto:hi@prasen.dev",
+};
+
+const ext = { target: "_blank", rel: "noreferrer" } as const;
+
+const NAV = [
+  { label: "Work", href: LINKS.github },
+  { label: "Process", href: LINKS.blog },
+  { label: "Journal", href: LINKS.x },
+];
 
 const SHIPPED = [
   { name: "Arbor", note: "Fintech onboarding", stat: "3 weeks · live" },
@@ -74,7 +89,7 @@ function Landing({ variant }: { variant: Variant }) {
     >
       {/* nav */}
       <Spec bp={bp} label="nav · h 40 · space-between" className="flex h-10 items-center justify-between">
-        <a href="https://x.com/prasenx" target="_blank" rel="noreferrer" className="flex items-center gap-2.5">
+        <a href={LINKS.x} {...ext} className="flex items-center gap-2.5">
           <Spec bp={bp} label="" className="h-7 w-7">
             {bp ? (
               <div className="h-full w-full rounded-full" />
@@ -93,13 +108,13 @@ function Landing({ variant }: { variant: Variant }) {
         </a>
         <div className={`flex items-center gap-7 text-[13.5px] ${muted}`}>
           {NAV.map((n) => (
-            <a key={n} href="#">
-              {n}
+            <a key={n.label} href={n.href} {...ext}>
+              {n.label}
             </a>
           ))}
           <Spec bp={bp} label="btn · 30×112" className="h-[30px]">
             <a
-              href="#"
+              href={LINKS.mail}
               className={`flex h-full items-center rounded-full px-3.5 text-[13px] font-medium ${
                 bp ? "text-[#c6c6c6]" : "bg-[#111] text-white"
               }`}
@@ -138,7 +153,7 @@ function Landing({ variant }: { variant: Variant }) {
           <div className="mt-8 flex items-center gap-5">
             <Spec bp={bp} label="btn · 42×150 · r-full" className="h-[42px]">
               <a
-                href="#"
+                href={LINKS.mail}
                 className={`flex h-full items-center rounded-full px-5 text-[14px] font-medium ${
                   bp ? "text-[#c6c6c6]" : "bg-[#111] text-white"
                 }`}
@@ -147,7 +162,7 @@ function Landing({ variant }: { variant: Variant }) {
               </a>
             </Spec>
             <Spec bp={bp} label="link · 14" className="w-fit">
-              <a href="#" className={`text-[14px] ${muted}`}>
+              <a href={LINKS.site} {...ext} className={`text-[14px] ${muted}`}>
                 See the work
               </a>
             </Spec>
@@ -182,7 +197,8 @@ function Landing({ variant }: { variant: Variant }) {
                 {SHIPPED.map((p) => (
                   <Spec key={p.name} bp={bp} label="tile · 96 · r-10" className="h-[96px]">
                     <a
-                      href="#"
+                      href={LINKS.projects}
+                      {...ext}
                       className={`flex h-full flex-col justify-between rounded-[10px] px-3.5 py-3 ${
                         bp ? "" : "bg-white/85 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
                       }`}
