@@ -3,6 +3,7 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-instrument-serif);
+  --font-mono: var(--font-geist-mono);
 }
 
 html,
