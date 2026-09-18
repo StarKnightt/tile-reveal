@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { TileReveal } from "@/components/tile-reveal";
+import avatar from "../../public/avatar.png";
 
 type Variant = "design" | "blueprint";
 
@@ -95,7 +96,7 @@ function Landing({ variant }: { variant: Variant }) {
               <div className="h-full w-full rounded-full" />
             ) : (
               <Image
-                src="/avatar.png"
+                src={avatar}
                 alt=""
                 width={28}
                 height={28}
