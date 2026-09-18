@@ -1,51 +1,143 @@
 # Tile Reveal
 
-A hero section that's secretly a grid of tiles. Move your cursor and the tiles under it flip over in a wave to show what's underneath, then settle back. Click empty space to flip the whole thing and hold it.
+A hero section that's secretly a grid of tiles. Move your cursor and the tiles under it flip over in a wave to reveal what's underneath, then settle back. Click empty space to flip the whole thing and hold it.
 
-The demo puts a landing page on the front and its **blueprint** on the back: the same layout as dashed outlines on grid paper, with type specs and dimensions in monospace.
+The demo puts a finished landing page on the front and its **blueprint** on the back: the same layout drawn as dashed outlines on grid paper, with type specs and dimensions in monospace. Hover to see how it's built.
 
-**Live:** https://starknightt.github.io/tile-reveal/
+## Preview
 
-React + Tailwind. No canvas, no animation library.
+![Tile Reveal demo](media/demo.gif)
+
+**Live demo:** [starknightt.github.io/tile-reveal](https://starknightt.github.io/tile-reveal/) · [Watch in HD (mp4)](media/demo.mp4)
+
+## Tech Stack
+
+- **React 19** — client component, one pointer handler, no state on the hot path
+- **Tailwind CSS v4** — styling
+- **Next.js 16** — app shell for the demo only; the component has no Next dependency
+- **TypeScript** — fully typed props
+
+No canvas, no WebGL, no animation library. The flip is CSS 3D transforms and transitions.
+
+## Installation
+
+Copy [`tile-reveal.tsx`](src/components/tile-reveal.tsx) into your project:
+
+```
+src/components/tile-reveal.tsx
+```
+
+Then add the flip rule to your global CSS (from [`globals.css`](src/app/globals.css)):
+
+```css
+.tr-tile { transform: rotateY(0deg); }
+.tr-tile[data-flipped="true"] { transform: rotateY(calc(180deg * var(--tr-dir, 1))); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-tile { transition-duration: 0ms !important; transition-delay: 0ms !important; }
+}
+```
+
+Requires React 18+ and Tailwind (the component uses a handful of utility classes plus inline styles for the dynamic bits).
 
 ## Usage
-
-Copy `src/components/tile-reveal.tsx` into your project and add the flip rule from `src/app/globals.css` (the `.tr-tile` block).
 
 ```tsx
 import { TileReveal } from "@/components/tile-reveal";
 
+export default function Hero() {
+  return (
+    <TileReveal
+      front={<Landing variant="design" />}
+      back={<Landing variant="blueprint" />}
+      overlay={<Landing variant="design" />}
+      rows={8}
+      cols={12}
+      radius={150}
+      className="h-[600px] w-[880px] rounded-2xl bg-white"
+    />
+  );
+}
+```
+
+`front` and `back` should be full-size layouts (`h-full w-full`). When both sides share the same structure, the swap reads as the page itself turning over rather than an overlay appearing.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `front` | `ReactNode` | — | Content shown at rest. |
+| `back` | `ReactNode` | — | Content revealed when a tile flips. |
+| `overlay` | `ReactNode` | `undefined` | Invisible interactive copy rendered on top. Only its `<a>` / `<button>` elements are hit-testable, so links work while the tiled copies stay inert. Also the only copy exposed to assistive tech. |
+| `rows` | `number` | `8` | Grid rows. |
+| `cols` | `number` | `12` | Grid columns. |
+| `radius` | `number` | `150` | Cursor influence radius in px. |
+| `hold` | `number` | `700` | How long a tile stays flipped after the cursor moves on (ms). |
+| `duration` | `number` | `620` | Single flip duration (ms). |
+| `stagger` | `number` | `140` | Max transition delay across the radius (ms). This is the wave. |
+| `clickToLock` | `boolean` | `true` | Click empty space to cascade the whole grid to the back and hold it; click again to release. |
+| `className` | `string` | `""` | Applied to the container. Give it a size. |
+| `style` | `CSSProperties` | `undefined` | Applied to the container. |
+
+## Examples
+
+### Light ↔ dark
+
+The simplest use: same layout, inverted palette.
+
+```tsx
 <TileReveal
-  front={<Hero variant="design" />}
-  back={<Hero variant="blueprint" />}
-  overlay={<Hero variant="design" />}   // optional: real links/buttons on top
-  rows={8}
-  cols={12}
-  radius={150}
-  className="h-[600px] w-[880px]"
+  front={<Hero theme="light" />}
+  back={<Hero theme="dark" />}
+  className="h-[70vh] w-full"
 />
 ```
 
-`front` and `back` should be full-size layouts (`h-full w-full`). If they share the same structure, the swap looks like the page itself turning over.
+### Marketing ↔ product
 
-| Prop | Default | What it does |
-| --- | --- | --- |
-| `front` / `back` | — | Content at rest / content revealed on flip |
-| `overlay` | — | Invisible interactive copy rendered on top; only its `<a>`/`<button>` elements are hit-testable. Also the only copy exposed to assistive tech. |
-| `rows`, `cols` | `8`, `12` | Grid density |
-| `radius` | `150` | Cursor influence radius (px) |
-| `hold` | `700` | How long a tile stays flipped after the cursor moves on (ms) |
-| `duration` | `620` | Flip duration (ms) |
-| `stagger` | `140` | Max transition delay across the radius (ms): the wave |
-| `clickToLock` | `true` | Click empty space to cascade the whole grid and hold it |
+Put the pitch on the front and the actual product screenshot on the back.
 
-## How it works
+```tsx
+<TileReveal
+  front={<Pitch />}
+  back={<img src="/app.png" className="h-full w-full object-cover" alt="" />}
+  rows={6}
+  cols={10}
+  radius={200}
+  hold={1200}
+/>
+```
 
-- Every tile is a full-size copy of the content clipped to its cell with `clip-path`, so content stays pixel-aligned across tile edges.
-- Inside each clipped cell, a `preserve-3d` element holds two faces with `backface-visibility: hidden`; rotating it 180° swaps them. Clip and rotation live on separate elements because `clip-path` on the rotating one would flatten it and break backface culling.
-- One `pointermove` handler computes distance to each cell center; tiles inside `radius` flip with a `transition-delay` proportional to distance. Flip direction follows cursor travel via a CSS variable.
-- No React state on the hot path: the handler writes `data-flipped` and `--tr-dir` straight to the DOM and CSS transitions do the rest. A single `requestAnimationFrame` loop unflips tiles when their hold expires.
-- The tiled copies are `inert` and `aria-hidden`; `prefers-reduced-motion` zeroes the transitions.
+### Calmer wave
+
+Fewer, larger tiles and a longer stagger.
+
+```tsx
+<TileReveal front={...} back={...} rows={5} cols={8} duration={800} stagger={260} />
+```
+
+## How It Works
+
+1. Every tile is a **full-size copy of the content**, clipped to its cell with `clip-path: inset(...)`. Because nothing is resized, content stays pixel-aligned across tile edges and the grid is invisible at rest.
+2. Inside each clipped cell sits a `transform-style: preserve-3d` element holding two faces: the front, and the back pre-rotated 180°. Both are `backface-visibility: hidden`, so rotating the parent 180° swaps them. Clipping and rotation live on **separate elements**: `clip-path` on the rotating element would force it flat and break backface culling.
+3. One `pointermove` handler measures the distance from the cursor to every cell center. Tiles inside `radius` flip with a `transition-delay` proportional to that distance, which produces the wave. Flip direction follows cursor travel through a `--tr-dir` CSS variable.
+4. No React re-renders on the hot path. The handler writes `data-flipped` and `--tr-dir` straight to DOM nodes and CSS transitions animate `transform` on the compositor. A single `requestAnimationFrame` loop unflips tiles when their hold expires and only runs while something is flipped.
+5. The tiled copies are `inert` and `aria-hidden`; `overlay` (or the first tile, if no overlay) is what screen readers and keyboards see.
+
+## Performance notes
+
+- 8×12 = 96 tiles is comfortable on a laptop. Each tile is two extra copies of your hero, so keep `front` / `back` reasonably light (text, a few boxes, one image).
+- Everything animated is `transform` only. No layout or paint on the hot path.
+- Geometry is precomputed as percentages, so resizing costs nothing.
+
+## Browser Support
+
+Any browser with CSS 3D transforms and `clip-path`:
+
+- Chrome / Edge 90+
+- Firefox 90+
+- Safari 15+
+- Mobile Safari / Chrome on iOS and Android (touch drag flips tiles; `touch-action: pan-y` keeps vertical scroll working)
 
 ## Run locally
 
